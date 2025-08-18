@@ -54,7 +54,7 @@ android {
 
 dependencies {
     // ⭐⭐⭐ TDLib निर्भरता को सीधे (hard-code) लिखा गया है ⭐⭐⭐
-    implementation("org.drinkless.tdlib:td:1.8.26")
+    implementation("org.drinkless.tdlib:td:1.8.26@jar")
 
     implementation(libs.material)
     implementation(libs.androidx.core.ktx)
