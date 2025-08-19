@@ -70,7 +70,21 @@ class TelegramClientImpl @Inject constructor(
 
     private fun setupTdlibParameters() {
         val filesDir = context.filesDir.absolutePath
-        val parameters = TdApi.SetTdlibParameters(false, "$filesDir/td_db", "$filesDir/td_files", ByteArray(0), true, true, true, true, 27041199, "7f65bd72b0b483a9eddcfbc487b72420", "en", Build.MODEL, Build.VERSION.RELEASE, "1.0.0")
+        val parameters = TdApi.SetTdlibParameters()
+        parameters.apiId = 27041199
+        parameters.apiHash = "7f65bd72b0b483a9eddcfbc487b72420"
+        parameters.databaseDirectory = "$filesDir/td_db"
+        parameters.filesDirectory = "$filesDir/td_files"
+        parameters.systemLanguageCode = "en"
+        parameters.deviceModel = Build.MODEL
+        parameters.systemVersion = Build.VERSION.RELEASE
+        parameters.applicationVersion = "1.0.0"
+        parameters.useMessageDatabase = true
+        parameters.useFileDatabase = true
+        parameters.useChatInfoDatabase = true
+        parameters.useSecretChats = true
+        parameters.databaseEncryptionKey = ByteArray(0)
+
         scope.launch { send(parameters) }
     }
 
@@ -89,15 +103,12 @@ class TelegramClientImpl @Inject constructor(
     override suspend fun logOut() { send(TdApi.LogOut()) }
     override suspend fun getMe(): TdApi.User = send(TdApi.GetMe()) as TdApi.User
     override suspend fun getUserFullInfo(userId: Long): TdApi.UserFullInfo = send(TdApi.GetUserFullInfo(userId)) as TdApi.UserFullInfo
-
-    // ⭐⭐⭐ getChats को पुरानी (2-पैरामीटर वाली) API के अनुसार वापस बदला गया ⭐⭐⭐
     override suspend fun getChats(limit: Int): List<TdApi.Chat> {
         val chatList = TdApi.ChatListMain()
         send(TdApi.LoadChats(chatList, limit))
-        val result = send(TdApi.GetChats(chatList, limit)) // 2-पैरामीटर वाला पुराना कंस्ट्रक्टर
+        val result = send(TdApi.GetChats(chatList, limit))
         return if (result is TdApi.Chats) result.chatIds.map { getChat(it) } else emptyList()
     }
-
     override suspend fun getChat(chatId: Long): TdApi.Chat = send(TdApi.GetChat(chatId)) as TdApi.Chat
     override suspend fun searchChats(query: String, limit: Int): List<TdApi.Chat> {
         val result = send(TdApi.SearchPublicChats(query)) as TdApi.Chats
@@ -110,10 +121,14 @@ class TelegramClientImpl @Inject constructor(
         return (result as TdApi.Messages).messages
     }
     override suspend fun getMessage(chatId: Long, messageId: Long): TdApi.Message = send(TdApi.GetMessage(chatId, messageId)) as TdApi.Message
-    override suspend fun viewMessages(chatId: Long, messageIds: LongArray, forceRead: Boolean) { send(TdApi.ViewMessages(chatId, messageIds, null, forceRead)) }
-    override suspend fun sendTyping(chatId: Long) { send(TdApi.SendChatAction(chatId, 0, null, TdApi.ChatActionTyping())) }
+    override suspend fun viewMessages(chatId: Long, messageIds: LongArray, forceRead: Boolean) {
+        send(TdApi.ViewMessages(chatId, 0L, messageIds, null, forceRead))
+    }
+    override suspend fun sendTyping(chatId: Long) {
+        send(TdApi.SendChatAction(chatId, 0, null, TdApi.ChatActionTyping()))
+    }
     override suspend fun sendTextMessage(chatId: Long, text: String, replyTo: Long?): TdApi.Message {
-        val content = TdApi.InputMessageText(TdApi.FormattedText(text, null), null, false)
+        val content = TdApi.InputMessageText(TdApi.FormattedText(text, arrayOf()), null, true)
         return send(TdApi.SendMessage(chatId, 0, replyTo ?: 0L, null, content)) as TdApi.Message
     }
     override suspend fun editMessageText(chatId: Long, messageId: Long, text: TdApi.InputMessageText): TdApi.Message { return send(TdApi.EditMessageText(chatId, messageId, null, text)) as TdApi.Message }

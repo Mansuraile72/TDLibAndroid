@@ -53,8 +53,8 @@ android {
 }
 
 dependencies {
-    // ⭐⭐⭐ TDLib निर्भरता को सीधे (hard-code) लिखा गया है ⭐⭐⭐
-    implementation("org.drinkless.tdlib:td:1.8.26")
+    // ⭐⭐⭐ विशेषज्ञ की सलाह के अनुसार, यहाँ अब सही tdlib एलियास का उपयोग किया जा रहा है ⭐⭐⭐
+    implementation(libs.tdlib)
 
     implementation(libs.material)
     implementation(libs.androidx.core.ktx)

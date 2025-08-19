@@ -25,7 +25,6 @@ interface TelegramClient {
     suspend fun openChat(chatId: Long)
     suspend fun closeChat(chatId: Long)
 
-    // ⭐ getChatHistory को 5 आर्ग्यूमेंट्स के साथ ठीक किया गया
     suspend fun getChatHistory(
         chatId: Long,
         fromMessageId: Long,
@@ -36,7 +35,6 @@ interface TelegramClient {
 
     suspend fun getMessage(chatId: Long, messageId: Long): TdApi.Message
 
-    // ⭐ viewMessages को 3 आर्ग्यूमेंट्स के साथ ठीक किया गया
     suspend fun viewMessages(chatId: Long, messageIds: LongArray, forceRead: Boolean)
 
     suspend fun sendTyping(chatId: Long)
