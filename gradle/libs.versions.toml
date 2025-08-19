@@ -16,8 +16,8 @@ kotlinxCoroutinesAndroid = "1.8.1"
 accompanistCoil = "0.9.0"
 hiltNavigationCompose = "1.2.0"
 material = "1.13.0"
-# ⭐⭐⭐ TDLib का वर्ज़न जोड़ा गया ⭐⭐⭐
-tdlib = "1.8.26"
+# ⭐⭐⭐ TDLib का वर्ज़न और परिभाषा बदली गई ⭐⭐⭐
+tdlib = "v1.8.8-20221104"
 
 [libraries]
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
@@ -45,8 +45,8 @@ hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hil
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
-# ⭐⭐⭐ TDLib लाइब्रेरी को यहाँ परिभाषित किया गया ⭐⭐⭐
-tdlib = { group = "org.drinkless.tdlib", name = "td", version.ref = "tdlib" }
+# ⭐⭐⭐ TDLib लाइब्रेरी की परिभाषा विशेषज्ञ के अनुसार बदली गई ⭐⭐⭐
+tdlib = { group = "ca.denisab85", name = "tdlib", version.ref = "tdlib" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
